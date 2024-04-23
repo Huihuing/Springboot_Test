@@ -1,5 +1,6 @@
-package com.example.ms1.note.Notebook;
+package com.example.ms1.Note.Notebook;
 
+import com.example.ms1.Note.Note.Note;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +19,5 @@ public class Notebook {
     private String name;
 
     @OneToMany(mappedBy = "notebook")
-    List<Notebook> notebookList = new ArrayList<>();
+    List<Note> noteList = new ArrayList<>();
 }

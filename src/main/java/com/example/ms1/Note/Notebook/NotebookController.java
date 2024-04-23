@@ -1,8 +1,8 @@
-package com.example.ms1.note.Notebook;
+package com.example.ms1.Note.Notebook;
 
-import com.example.ms1.note.note.Note;
-import com.example.ms1.note.note.NoteRepository;
-import com.example.ms1.note.note.NoteService;
+import com.example.ms1.Note.Note.Note;
+import com.example.ms1.Note.Note.NoteRepository;
+import com.example.ms1.Note.Note.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +25,14 @@ public class NotebookController {
         notebookRepository.save(notebook);
         noteService.saveDefault(notebook);
 
-        return "redirect";
+        return "redirect:/";
     }
 
     @GetMapping("/books/{id}")
     public String detail(@PathVariable("id") Long id) {
         Notebook notebook = notebookRepository.findById(id).orElseThrow();
-        Note note = notebook.getId(notebook);
+        Note note = notebook.getNoteList().get(0);
 
-        return "redirect/books/%d/notes/%d".formatted(id, note.getId());
+        return "redirect:/books/%d/notes/%d".formatted(id, note.getId());
     }
 }

@@ -1,13 +1,12 @@
-package com.example.ms1.note.note;
+package com.example.ms1.Note.Note;
 
-import com.example.ms1.note.Notebook.Notebook;
-import com.example.ms1.note.Notebook.NotebookRepository;
+import com.example.ms1.Note.Notebook.Notebook;
+import com.example.ms1.Note.Notebook.NotebookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -23,15 +22,15 @@ public class NoteController {
     public String write(@PathVariable("notebookId") Long notebookId) {
         Notebook notebook = notebookRepository.findById(notebookId).orElseThrow();
         noteService.saveDefault(notebook);
-        return "redirect:/";
+        return "redirect:/" + notebookId + "/notes";
     }
 
     @GetMapping("/{id}")
     public String detail(Model model, @PathVariable("notebookId") Long notebookId, @PathVariable("id") Long id) {
-        Note note = noteRepository.findAll().get(0);
+        Note note = noteRepository.findById(id).orElseThrow();
 
         List<Notebook> notebookList = notebookRepository.findAll();
-        Notebook targetNotebook = notebookRepository.findById(notebookId).get();
+        Notebook targetNotebook = notebookRepository.findById(notebookId).orElseThrow();
         List<Note> noteList = noteRepository.findByNotebook(targetNotebook);
 
         model.addAttribute("notebookList", notebookList);
@@ -44,7 +43,7 @@ public class NoteController {
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable("notebookId") Long notebookId, @PathVariable("id") Long id, String title, String content) {
-        Note note = noteRepository.findAll().get(0);
+        Note note = noteRepository.findById(id).orElseThrow();
 
         if (title.trim().length() == 0) {
             title = "title";
@@ -54,13 +53,13 @@ public class NoteController {
         note.setContent(content);
 
         noteRepository.save(note);
-        return "redirect/books/%d/notes/%d".formatted(notebookId, id);
+        return "redirect:/books/" + notebookId + "/notes/" + id;
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable("notebookId") Long notebookId, @PathVariable("id") Long id) {
         noteRepository.deleteById(id);
-        return "redirect:/";
+        return "redirect:/books/" + notebookId + "/notes"  + id;
     }
 
 }
